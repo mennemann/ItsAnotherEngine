@@ -39,7 +39,7 @@ Color World::get_pixel(int x, int y, int width, int height, Vec3 camera_position
     Vec3 camera_front = camera_right.cross(camera_up).normalize();
 
     Vec3 march_direction = (camera_front * focal_length) + (camera_right*(x - width/2)) + (camera_up*(y - height/2));
-    Vec3 march_position = camera_position + march_direction;
+    Vec3 march_position = camera_position;
 
     march_direction = march_direction.normalize();
 

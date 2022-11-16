@@ -132,17 +132,17 @@ class Test: public Box
         }
 
         virtual Color color(Vec3 position) {
-            int square_size = 100;
+            int square_size = 20;
             int mod_x = (int)position.x % square_size;
             int mod_z = (int)position.z % square_size;
 
             bool darken = false;
-            if (abs(mod_x) > square_size/2) {
+            if (abs(mod_x) >= square_size/2) {
                 darken = true;
             } else darken = false;
             if (position.x < 0) darken = !darken;
 
-            if (abs(mod_z) > square_size/2) {
+            if (abs(mod_z) >= square_size/2) {
                 darken = !darken;
             }
 
