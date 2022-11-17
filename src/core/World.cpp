@@ -4,6 +4,7 @@
 #include <limits>
 #include <thread>
 #include <vector>
+#include <cmath>
 
 using namespace std;
 
@@ -57,11 +58,14 @@ Color World::get_pixel(int x, int y, int width, int height, Vec3 camera_position
     if (hit) {
         Color res = RESULT_HANDLE->color(march_position);
 
-        double brightness = 1;
+        double brightness = 1.0;
         for (auto const &light: lights) {
-            brightness *= surface_brightness(march_position, *light);
-            brightness *= shadow_brightness(march_position, *light);
+            double surf_b = surface_brightness(march_position, *light);
+            double shad_b = shadow_brightness(march_position, *light);
+            brightness = 0.2*(surf_b*surf_b) + 0.8*(shad_b);
         }
+
+        brightness = (sqrt(sqrt(brightness))+0.2)/1.2;
         
         res.r *= brightness;
         res.g *= brightness;
@@ -109,7 +113,7 @@ Vec3 World::estimateNormal(Vec3 p) {
 }
 
 double World::surface_brightness(Vec3 p, Light l){
-    return max(1-(estimateNormal(p)*(p-l.position).normalize()+1)/2, 0.1);
+    return 1-(estimateNormal(p)*(p-l.position).normalize()+1)/2;
 }
 
 double World::shadow_brightness(Vec3 p, Light l){
@@ -117,12 +121,16 @@ double World::shadow_brightness(Vec3 p, Light l){
 
     Shape* RESULT_HANDLE = NULL;
     
-    p = p + estimateNormal(p) * 0.01;
+    p = p+estimateNormal(p)*0.05;
+
+    double k=2;
+    double res = 1.0;
     for (double t = 0; t<(l.position-p).length();) {
         double free = World::distance(p+shadow_direction*t, RESULT_HANDLE);
-        if (free<0.002) return 0.5; 
+        if (free<0.01) return 0.0;
+        res = max(min(res, k*free/t),0.0);
         t+=free;
     }
 
-    return 1.0;
+    return res;
 }
