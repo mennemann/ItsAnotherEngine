@@ -60,12 +60,11 @@ Color World::get_pixel(int x, int y, int width, int height, Vec3 camera_position
 
         double brightness = 1.0;
         for (auto const &light: lights) {
-            double surf_b = surface_brightness(march_position, *light);
-            double shad_b = shadow_brightness(march_position, *light);
-            brightness = 0.2*(surf_b*surf_b) + 0.8*(shad_b);
+            brightness = surface_brightness(march_position, *light)*shadow_brightness(march_position, *light);
         }
 
-        brightness = (sqrt(sqrt(brightness))+0.2)/1.2;
+        double elevation = 0.2;
+        brightness = (brightness+elevation)/(1.0+elevation);
         
         res.r *= brightness;
         res.g *= brightness;
@@ -121,15 +120,20 @@ double World::shadow_brightness(Vec3 p, Light l){
 
     Shape* RESULT_HANDLE = NULL;
     
-    p = p+estimateNormal(p)*0.05;
+    p = p+estimateNormal(p);
 
-    double k=2;
+    double k=16.0;
     double res = 1.0;
-    for (double t = 0; t<(l.position-p).length();) {
-        double free = World::distance(p+shadow_direction*t, RESULT_HANDLE);
-        if (free<0.01) return 0.0;
-        res = max(min(res, k*free/t),0.0);
-        t+=free;
+    double ph = 1e20;
+    
+    for (double t = 0.0; t<(l.position-p).length();) {
+        double h = World::distance(p+shadow_direction*t, RESULT_HANDLE);
+        if (0.05>h) return 0.0;
+        double y = h*h/(2.0*ph);
+        double d = sqrt(h*h-y*y);
+        res = min( res, k*d/max(0.0,t-y) );
+        ph = h;
+        t += h;
     }
 
     return res;
