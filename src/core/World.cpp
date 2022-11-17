@@ -8,11 +8,11 @@
 using namespace std;
 
 
-void World::register_object(Shape* shape){
+void World::add(Shape* shape){
     shapes.push_back(shape);
 }
 
-void World::register_object(Light* light) {
+void World::add(Light* light) {
     lights.push_back(light);
 }
 

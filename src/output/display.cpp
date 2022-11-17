@@ -21,8 +21,8 @@ Mat convert(vector<vector<Color>> &img) {
 
     Mat m (height, width, CV_8UC3);
 
-    for (int y = 0; (long unsigned int)y < height; y++){
-        for (int x = 0; (long unsigned int)x < width; x++){
+    for (int y = 0; y < height; y++){
+        for (int x = 0; x < width; x++){
             m.at<Vec3b>(Point(x,(height-1)-y)) = {img[y][x].b,img[y][x].g,img[y][x].r};
         }
     }

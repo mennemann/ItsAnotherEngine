@@ -14,8 +14,8 @@ class World{
         vector<Shape*> shapes;
         vector<Light*> lights;
 
-        void register_object(Shape* shape);
-        void register_object(Light* light);
+        void add(Shape* shape);
+        void add(Light* light);
 
         double distance(Vec3 p, Shape* &CLOSEST);
 
