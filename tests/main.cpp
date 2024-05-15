@@ -38,6 +38,10 @@ class MeltingObject: public Shape{
                 b: (int)((double)mag_s1*s1->color(position).b + (double)mag_s2*s2->color(position).b)
             };
         }
+
+        virtual double reflectance(Vec3 position) {
+            return 0.9;
+        }
 };
 
 
@@ -71,15 +75,15 @@ int main(void) {
     auto m1 = new MeltingObject(b1,s1);
     world->add(m1);
 
-    //world->add(new Test{{Vec3{0,0,400}}, 400, 400});
+    world->add(new Test{{Vec3{0,-10,400}}, 400, 400});
 
-    Vec3 camera_up = (s1->vertices[0] - camera_position).normalize().cross(camera_right);
+    Vec3 camera_up = (s1->position - camera_position).normalize().cross(camera_right);
     
     int frame = 0;
     while(1) {
         
-        m1->s2->vertices[0].x = sin((double)frame/6.0)*40.0;
-        m1->s2->vertices[0].z = (cos((double)frame/6.0)*40.0)+400;
+        s1->position.x = sin((double)frame/6.0)*40.0;
+        s1->position.z = (cos((double)frame/6.0)*40.0)+400;
 
         vector<Vec3> camera_data {camera_position, camera_up, camera_right};
 
