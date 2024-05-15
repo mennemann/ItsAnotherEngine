@@ -1,5 +1,5 @@
 #ifndef Display_H
-#define Display_G
+#define Display_H
 
 #include <string>
 #include <vector>
