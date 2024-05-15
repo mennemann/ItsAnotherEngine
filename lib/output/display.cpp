@@ -13,13 +13,13 @@ using namespace std;
 GLFWwindow* window = nullptr;
 uint8_t* rgbArray;
 
-auto init(int WIDTH, int HEIGHT) {
+auto init(int width, int height, string window_name) {
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
         return -1;
     }
 
-    window = glfwCreateWindow(WIDTH, HEIGHT, "GLFW Window", NULL, NULL);
+    window = glfwCreateWindow(width, height, window_name.c_str(), NULL, NULL);
     if (!window) {
         std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -27,7 +27,7 @@ auto init(int WIDTH, int HEIGHT) {
     }
 
     glfwMakeContextCurrent(window);
-    rgbArray = new uint8_t[WIDTH * HEIGHT * 3];
+    rgbArray = new uint8_t[width * height * 3];
     return 0;
 }
 
@@ -35,7 +35,8 @@ auto init(int WIDTH, int HEIGHT) {
 void display(string window_name, vector<vector<Color>>& img, int frame) {
     int width = img[0].size();
     int height = img.size();
-    if (window == nullptr) init(width, height);
+    if (window == nullptr) init(width, height, window_name);
+    cout << frame << endl;
     glClear(GL_COLOR_BUFFER_BIT);
 
 

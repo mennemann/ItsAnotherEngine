@@ -81,7 +81,7 @@ Color World::get_pixel(int x, int y, int width, int height, Vec3 camera_position
 
 void World::render(vector<vector<Color>>& img, vector<Vec3> camera_data, int focal_length, int render_distance) {
 #pragma omp parallel for
-    for (int i = 0; i < img.size() * img[0].size(); i++) {
+    for (size_t i = 0; i < img.size() * img[0].size(); i++) {
         int x = i % img[0].size();
         int y = i / img[0].size();
 

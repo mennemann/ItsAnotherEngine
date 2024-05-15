@@ -3,7 +3,7 @@
 
 #include "core/Shape.hpp"
 #include "types/Vec3.hpp"
-#include "types/color.hpp"
+#include "types/Color.hpp"
 
 using namespace std;
 #ifndef Shapes_H
@@ -22,75 +22,6 @@ class Sphere : public Shape {
     }
 };
 
-class Plane : public Shape {
-   public:
-    Vec3 normal{0, 0, 0};
-
-    Plane(Vec3 position, Color color, Vec3 normal) : Shape(position, color) {
-        this->normal = normal.normalize();
-    }
-
-    virtual double sdf(Vec3 position) {
-        int h = 0;
-        return (normal * (position - this->position) + h);
-    }
-
-    virtual Color color(Vec3 position) {
-        int mod_x = (int)position.x % 700;
-        int mod_z = (int)position.z % 700;
-
-        bool darken = false;
-        if (abs(mod_x) > 350) {
-            darken = true;
-        } else
-            darken = false;
-        if (position.x < 0) darken = !darken;
-
-        if (abs(mod_z) > 350) {
-            darken = !darken;
-        }
-
-        if (darken) {
-            Color new_c = this->col;
-            new_c.r -= 20;
-            new_c.g -= 20;
-            new_c.b -= 20;
-            return new_c;
-        } else
-            return this->col;
-    }
-};
-
-class TriPrism : public Shape {
-   public:
-    Vec3 dimensions{0, 0, 0};
-
-    TriPrism(Vec3 position, Color color, Vec3 dimensions) : Shape(position, color) {
-        this->dimensions = dimensions;
-    }
-
-    virtual double sdf(Vec3 position) {
-        Vec3 p = this->position - position;
-        Vec3 q{abs(p.x), abs(p.y), abs(p.z)};
-
-        return max(q.z - dimensions.y, max(q.x * 0.866025 + p.y * 0.5, -p.y) - dimensions.x * 0.5);
-    }
-};
-
-class Octahedron : public Shape {
-   public:
-    double radius;
-
-    Octahedron(Vec3 position, Color color, double radius) : Shape(position, color) {
-        this->radius = radius;
-    }
-
-    virtual double sdf(Vec3 position) {
-        Vec3 p = (this->position - position);
-        p = Vec3{abs(p.x), abs(p.y), abs(p.z)};
-        return (p.x + p.y + p.z - this->radius) * 0.57735027;
-    }
-};
 
 class RoundBox : public Shape {
    public:
@@ -146,10 +77,6 @@ class Test : public Box {
             return new_c;
         } else
             return this->col;
-    }
-
-    virtual double reflectance(Vec3 position) {
-        return 0;
     }
 };
 #endif

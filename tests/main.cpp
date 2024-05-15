@@ -1,5 +1,6 @@
 #include "core/World.hpp"
 #include "core/Light.hpp"
+#include "types/Color.hpp"
 #include "core/Shape.hpp"
 #include "shapes/BasicShapes.hpp"
 #include "output/display.hpp"
@@ -16,7 +17,7 @@ class MeltingObject: public Shape{
         Shape* s1;
         Shape* s2;
 
-        MeltingObject(Shape* s1, Shape* s2) : Shape({Vec3{0,0,0}}, Color{255,0,100}){
+        MeltingObject(Shape* s1, Shape* s2, double refl) : Shape({0,0,0}, Color{255,0,100}, refl){
             this->s1 = s1;
             this->s2 = s2;
         }
@@ -37,10 +38,6 @@ class MeltingObject: public Shape{
                 g: (int)((double)mag_s1*s1->color(position).g + (double)mag_s2*s2->color(position).g),
                 b: (int)((double)mag_s1*s1->color(position).b + (double)mag_s2*s2->color(position).b)
             };
-        }
-
-        virtual double reflectance(Vec3 position) {
-            return 0.9;
         }
 };
 
@@ -69,10 +66,10 @@ int main(void) {
     world->add(new Light{Vec3{0, 150, 400}});
 
 
-    auto b1 = new RoundBox{{Vec3{0,25,440}}, Color {255,55,55}, Vec3{20,50,20}, 5};
-    auto s1 = new Sphere {{Vec3{0,40,400}}, Color {50, 230, 140}, 20};
+    auto b1 = new RoundBox{Vec3{0,25,440}, Color {255,55,55}, Vec3{20,50,20}, 5};
+    auto s1 = new Sphere {Vec3{0,40,400}, Color {50, 230, 140}, 20};
 
-    auto m1 = new MeltingObject(b1,s1);
+    auto m1 = new MeltingObject(b1,s1,1);
     world->add(m1);
 
     world->add(new Test{{Vec3{0,-10,400}}, 400, 400});
@@ -90,7 +87,6 @@ int main(void) {
         world->render(img, camera_data, focal_length, render_distance);
         display("Yay", img, frame);
         frame++;
-        cout << frame << endl;
     }
     
     return 0;
