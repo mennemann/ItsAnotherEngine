@@ -1,18 +1,31 @@
+#include <limits>
+
 #include "types/Vec3.hpp"
 #include "types/color.hpp"
-#include <vector>
 
 #ifndef Shape_H
 #define Shape_H
 
 class Shape {
-    public:
-        std::vector<Vec3> vertices;
-        Color col;
-        Shape(std::vector<Vec3> vertices, Color color);
-        
-        virtual double sdf(Vec3 position);
-        virtual Color color(Vec3 position);
+   public:
+    Vec3 position;
+
+    Color col;
+    double refl;
+
+    virtual Color color(Vec3 postition) {
+        return this->col;
+    }
+
+    virtual double reflectance(Vec3 position) {
+        return this->refl;
+    }
+
+    Shape(Vec3 pos, Color color, double reflectance = 0) : position(pos), col(color), refl(reflectance) {}
+
+    virtual double sdf(Vec3 position) {
+        return std::numeric_limits<double>::max();
+    }
 };
 
 #endif
