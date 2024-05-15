@@ -22,6 +22,7 @@ class World{
         void render(vector<vector<Color>> &img, vector<Vec3> camera_data, int focal_length, int render_distance);
 
     private:
+        Color shoot(Vec3 position, Vec3 direction, Vec3 camera_position, int render_distance, int n);
         Color get_pixel(int x, int y, int width, int height, Vec3 camera_position, Vec3 camera_up, Vec3 camera_right, int focal_length, int render_distance);
         void render_rows(int rows, int offset, vector<vector<Color>> &img, vector<Vec3> camera_data, int focal_length, int render_distance);
         Vec3 estimateNormal(Vec3 p);
