@@ -45,3 +45,7 @@ string Vec3::string(){
     strs << "{ " << x << "  " << y << "  " << z << " }";
     return strs.str();
 }
+
+Vec3 reflect(Vec3 r, Vec3 n) {
+    return r - n*(2*(r*n));
+}

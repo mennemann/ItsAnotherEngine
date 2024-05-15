@@ -11,6 +11,14 @@ struct Color {
         g*=other;
         b*=other;
     }
+
+    Color operator*(double const other) const {
+        return {r*other, g*other, b*other};
+    }
+
+    Color operator+(Color const other) const {
+        return {r+other.r, g+other.g, b+other.b};
+    }
 };
 
 #endif

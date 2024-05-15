@@ -17,4 +17,6 @@ class Vec3
         double length();
 };
 
+Vec3 reflect(Vec3 r, Vec3 n);
+
 #endif
