@@ -36,12 +36,22 @@ double World::distance(Vec3 p, Shape*& CLOSEST) {
 
 Color World::shoot(Vec3 position, Vec3 direction, Vec3 camera_position, int render_distance, int n) {
     Shape* RESULT_HANDLE = NULL;
-
+    if (n > 2) return {0, 0, 0};
     while (((position - camera_position).length() < render_distance)) {
         double free_distance = World::distance(position, RESULT_HANDLE);
         position = position + (direction * free_distance);
         if (free_distance < 0.1) {
             Color c = RESULT_HANDLE->color(position);
+            Color r = {0, 0, 0};
+
+            double reflectance = RESULT_HANDLE->reflectance(position);
+            if (reflectance != 0) {
+                Vec3 normal = estimateNormal(position);
+                Vec3 march_direction = reflect(direction, normal);
+                r = shoot(position + march_direction * 0.2, march_direction, camera_position, render_distance, n + 1);
+            } 
+
+            c = c*(1-reflectance) + r*reflectance;
 
             double brightness = 1.0;
             for (auto const& light : lights) {
