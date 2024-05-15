@@ -1,10 +1,10 @@
+#ifndef Display_H
+#define Display_G
+
 #include <string>
 #include <vector>
 
 #include "types/color.hpp"
-
-#ifndef Display_H
-#define Display_G
 
 using namespace std;
 void display(string window_name, vector<vector<Color>> &img, int frame);

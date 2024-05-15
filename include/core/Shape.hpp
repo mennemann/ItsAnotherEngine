@@ -1,10 +1,10 @@
+#ifndef Shape_H
+#define Shape_H
+
 #include <limits>
 
 #include "types/Vec3.hpp"
 #include "types/color.hpp"
-
-#ifndef Shape_H
-#define Shape_H
 
 class Shape {
    public:

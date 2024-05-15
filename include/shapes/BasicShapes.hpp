@@ -1,3 +1,6 @@
+#ifndef Shapes_H
+#define Shapes_H
+
 #include <cmath>
 #include <vector>
 
@@ -6,8 +9,7 @@
 #include "types/Color.hpp"
 
 using namespace std;
-#ifndef Shapes_H
-#define Shapes_H
+
 
 class Sphere : public Shape {
    public:

@@ -1,3 +1,6 @@
+#ifndef World_H
+#define World_H
+
 #include <vector>
 
 #include "Light.hpp"
@@ -5,9 +8,6 @@
 #include "types/Vec3.hpp"
 
 using namespace std;
-
-#ifndef World_H
-#define World_H
 
 class World {
    public:

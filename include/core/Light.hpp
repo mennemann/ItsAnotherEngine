@@ -1,7 +1,8 @@
-#include "types/Vec3.hpp"
-
 #ifndef Light_H
 #define Light_H
+
+#include "types/Vec3.hpp"
+
 
 class Light {
    public:
