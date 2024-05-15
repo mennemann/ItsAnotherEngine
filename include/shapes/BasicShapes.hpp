@@ -1,6 +1,6 @@
-#include "../core/Shape.hpp"
-#include "../types/Vec3.hpp"
-#include "../types/color.hpp"
+#include "core/Shape.hpp"
+#include "types/Vec3.hpp"
+#include "types/color.hpp"
 #include <cmath>
 #include <vector>
 

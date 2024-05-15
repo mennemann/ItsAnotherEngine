@@ -1,4 +1,4 @@
-#include "../types/Vec3.hpp"
+#include "types/Vec3.hpp"
 
 
 #ifndef Light_H

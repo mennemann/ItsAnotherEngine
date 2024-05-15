@@ -1,7 +1,7 @@
-#include "Shape.hpp"
+#include "core/Shape.hpp"
 
-#include "../types/Vec3.hpp"
-#include "../types/color.hpp"
+#include "types/Vec3.hpp"
+#include "types/color.hpp"
 
 #include <limits>
 #include <vector>

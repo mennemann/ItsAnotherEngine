@@ -1,20 +1,33 @@
-CC = g++
-CFLAGS = -g -Wall
+CXX = g++
+CXXFLAGS = -g -Wall -Wextra -std=c++17 -fPIC -Iinclude -Ilib -fopenmp  -I C:\msys64\mingw64\include
 
-IDIR1=./src/core src/core/*.cpp
-IDIR2=./src/output src/output/*.cpp
-IDIR3=./src/shapes
-IDIR4=./src/types src/types/*.cpp
-IDIR5=/usr/include/opencv4/
+SRCDIR = lib
+OUTDIR = build
 
-INC=-I$(IDIR1) -I$(IDIR2) -I$(IDIR3) -I$(IDIR4) -I$(IDIR5)
+SOURCES = $(wildcard $(SRCDIR)/**/*.cpp)
+OBJECTS = $(SOURCES:$(SRCDIR)/%.cpp=$(OUTDIR)/%.o)
 
-
-LIBS=opencv_core opencv_videoio opencv_highgui
+TARGET = ItsAnotherEngine.dll
+TEST_EXE = main.exe
 
 
-MAIN=./src/main.cpp
+all: $(TARGET)
 
-main:
-	#echo $(INC)
-	$(CC) $(CFLAGS) $(INC) $(LIBS:%=-l%) $(MAIN)
+#Linking
+$(TARGET): $(OBJECTS)
+	$(CXX) -shared -o $@ $^ -L C:\msys64\mingw64\lib -lglfw3 -lopengl32
+
+#Compiling
+$(OUTDIR)/%.o: $(SRCDIR)/%.cpp
+	$(shell if not exist "$(dir $@)" mkdir "$(dir $@)")
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+
+clean:
+	if exist $(OUTDIR) rd /s /q $(OUTDIR)
+	if exist $(TARGET) del $(TARGET)
+	if exist $(TEST_EXE) del $(TEST_EXE)
+
+
+test: tests/main.cpp $(TARGET)
+	g++ -Iinclude -o $(TEST_EXE) $< -L. -lItsAnotherEngine

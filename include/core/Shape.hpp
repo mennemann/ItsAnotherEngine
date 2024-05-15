@@ -1,5 +1,5 @@
-#include "../types/Vec3.hpp"
-#include "../types/color.hpp"
+#include "types/Vec3.hpp"
+#include "types/color.hpp"
 #include <vector>
 
 #ifndef Shape_H

@@ -1,4 +1,4 @@
-#include "../types/Vec3.hpp"
+#include "types/Vec3.hpp"
 
 #include "Shape.hpp"
 #include "Light.hpp"

@@ -1,4 +1,3 @@
-#include <stdint.h>
 #ifndef color_t
 #define color_t
 

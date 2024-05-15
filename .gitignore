@@ -1,4 +1,8 @@
 *.out
-devnotes
-old/
+*.exe
 *.avi
+*.dll
+*.so
+build/
+.vscode/
+*.cmd

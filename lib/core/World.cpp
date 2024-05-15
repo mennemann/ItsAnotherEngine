@@ -1,5 +1,6 @@
-#include "World.hpp"
-#include "../types/Vec3.hpp"
+#include "core/World.hpp"
+#include "types/Vec3.hpp"
+#include "types/Color.hpp"
 
 #include <limits>
 #include <thread>
@@ -84,12 +85,11 @@ void World::render_rows(int rows, int offset, vector<vector<Color>> &img, vector
 
 void World::render(vector<vector<Color>> &img, vector<Vec3> camera_data, int focal_length, int render_distance){
     int rows = img.size();
-    int thread_c = 8;
+    int thread_c = 16;
 
     int block_size = rows/thread_c;
 
     vector<thread> threads;
-
     for (int i = 0; i < thread_c; i++) {
         threads.push_back(thread(&World::render_rows, this, 
         block_size,block_size*i, ref(img), 
