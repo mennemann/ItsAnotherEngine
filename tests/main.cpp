@@ -71,7 +71,7 @@ int main(void) {
     auto m1 = new MeltingObject(b1,s1);
     world->add(m1);
 
-    world->add(new Test{{Vec3{0,0,400}}, 400, 400});
+    //world->add(new Test{{Vec3{0,0,400}}, 400, 400});
 
     Vec3 camera_up = (s1->vertices[0] - camera_position).normalize().cross(camera_right);
     
@@ -85,7 +85,6 @@ int main(void) {
 
         world->render(img, camera_data, focal_length, render_distance);
         display("Yay", img, frame);
-        //fileout("render.avi", img, frame, 400, 15);
         frame++;
         cout << frame << endl;
     }

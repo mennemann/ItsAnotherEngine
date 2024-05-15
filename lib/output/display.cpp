@@ -48,7 +48,7 @@ void display(string window_name, vector<vector<Color>>& img, int frame) {
         }
     }
 
-    glRasterPos2i(-1, -1);  // Set the raster position
+    glRasterPos2i(-1, -1);
     glDrawPixels(width, height, GL_RGB, GL_UNSIGNED_BYTE, rgbArray);
 
     glfwSwapBuffers(window);

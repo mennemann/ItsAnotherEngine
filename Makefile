@@ -31,3 +31,6 @@ clean:
 
 test: tests/main.cpp $(TARGET)
 	g++ -Iinclude -o $(TEST_EXE) $< -L. -lItsAnotherEngine
+
+run: test
+	main.exe

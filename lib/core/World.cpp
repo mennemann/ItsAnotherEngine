@@ -50,7 +50,7 @@ Color World::get_pixel(int x, int y, int width, int height, Vec3 camera_position
     while (((march_position - camera_position).length() < render_distance)) {
         double free_distance = World::distance(march_position, RESULT_HANDLE);
         march_position = march_position + (march_direction*free_distance);
-        if(free_distance < 0.5) {
+        if(free_distance < 0.1) {
             hit = true;
             break;
         }
