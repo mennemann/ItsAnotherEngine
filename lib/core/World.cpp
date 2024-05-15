@@ -75,29 +75,15 @@ Color World::get_pixel(int x, int y, int width, int height, Vec3 camera_position
     } else return Color{r:0, g:0, b:0};
 }
 
-void World::render_rows(int rows, int offset, vector<vector<Color>> &img, vector<Vec3> camera_data, int focal_length, int render_distance) {
-    for (int y = offset; y < offset+rows; y++){
-        for (int x = 0; (long unsigned int)x < img[0].size(); x++){
-            img[y][x] = get_pixel(x,y,img[0].size(),img.size(), camera_data[0], camera_data[1], camera_data[2], focal_length, render_distance);
-        }
-    }
-}
-
 void World::render(vector<vector<Color>> &img, vector<Vec3> camera_data, int focal_length, int render_distance){
-    int rows = img.size();
-    int thread_c = 16;
+    
+    #pragma omp parallel for
+    for (int i = 0; i<img.size()*img[0].size(); i++) {
+        int x = i % img[0].size();
+        int y = i / img[0].size();
 
-    int block_size = rows/thread_c;
-
-    vector<thread> threads;
-    for (int i = 0; i < thread_c; i++) {
-        threads.push_back(thread(&World::render_rows, this, 
-        block_size,block_size*i, ref(img), 
-        camera_data, 
-        focal_length, render_distance));
+        img[y][x] = get_pixel(x,y,img[0].size(),img.size(), camera_data[0], camera_data[1], camera_data[2], focal_length, render_distance);
     }
-
-    for (thread& th : threads) th.join();
 }
 
 Vec3 World::estimateNormal(Vec3 p) {

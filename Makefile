@@ -15,7 +15,7 @@ all: $(TARGET)
 
 #Linking
 $(TARGET): $(OBJECTS)
-	$(CXX) -shared -o $@ $^ -L C:\msys64\mingw64\lib -lglfw3 -lopengl32
+	$(CXX) -shared -o $@ $^ -L C:\msys64\mingw64\lib -lglfw3 -lopengl32 -fopenmp
 
 #Compiling
 $(OUTDIR)/%.o: $(SRCDIR)/%.cpp
