@@ -45,7 +45,9 @@ class Box : public RoundBox {
 
 class Test : public Box {
    public:
-    Test(Vec3 position, double width, double depth) : Box(position, Color{255, 255, 255}, Vec3{width, 0, depth}) {}
+    Test(Vec3 position, double width, double depth, double reflectance = 0) : Box(position, Color{255, 255, 255}, Vec3{width, 0, depth}) {
+        this->refl = reflectance;
+    }
 
     virtual Color color(Vec3 position) {
         int square_size = 20;

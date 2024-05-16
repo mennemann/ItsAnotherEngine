@@ -14,6 +14,8 @@ class World {
     vector<Shape*> shapes;
     vector<Light*> lights;
 
+    Color background = {0,0,0};
+
     void add(Shape* shape);
     void add(Light* light);
 

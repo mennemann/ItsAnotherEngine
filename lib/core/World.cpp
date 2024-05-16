@@ -66,7 +66,7 @@ Color World::shoot(Vec3 position, Vec3 direction, Vec3 camera_position, int rend
         }
     }
 
-    return Color{0, 0, 0};
+    return background;
 }
 
 Color World::get_pixel(int x, int y, int width, int height, Vec3 camera_position, Vec3 camera_up, Vec3 camera_right, int focal_length, int render_distance) {
