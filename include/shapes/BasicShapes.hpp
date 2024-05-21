@@ -33,8 +33,11 @@ class RoundBox : public Shape {
 
         Vec3 q{abs(p.x), abs(p.y), abs(p.z)};
         q = q - dimensions;
+        q.x += radius;
+        q.y += radius;
+        q.z += radius;
 
-        return (Vec3{max(q.x, 0.0), max(q.y, 0.0), max(q.z, 0.0)}).length() - min(max(q.x, max(q.y, q.z)), 0.0) - radius;
+        return (Vec3{max(q.x, 0.0), max(q.y, 0.0), max(q.z, 0.0)}).length() + min(max(q.x, max(q.y, q.z)), 0.0) - radius;
     }
 };
 
