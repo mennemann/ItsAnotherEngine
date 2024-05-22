@@ -34,6 +34,17 @@ double World::distance(Vec3 p, Shape*& CLOSEST) {
     return min;
 }
 
+Vec3 World::traverse_one(Vec3 position, Vec3 direction) {
+    Shape* RESULT_HANDLE;
+
+    double free_distance;
+
+    while ((free_distance = World::distance(position, RESULT_HANDLE)) <= 0.2) {
+        position = position + (direction * max(0.1, abs(free_distance)));
+    }
+    return position;
+}
+
 Color World::shoot(Vec3 position, Vec3 direction, Vec3 camera_position, int render_distance, int n) {
     Shape* RESULT_HANDLE = NULL;
     if (n > 2) return {0, 0, 0};

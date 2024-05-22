@@ -27,6 +27,7 @@ class World {
     Color shoot(Vec3 position, Vec3 direction, Vec3 camera_position, int render_distance, int n);
     Color get_pixel(int x, int y, int width, int height, Vec3 camera_position, Vec3 camera_up, Vec3 camera_right, int focal_length, int render_distance);
     Vec3 estimateNormal(Vec3 p);
+    Vec3 traverse_one(Vec3 position, Vec3 direction);
     double surface_brightness(Vec3 p, Light l);
     double shadow_brightness(Vec3 p, Light l);
 };
