@@ -18,5 +18,6 @@ class Vec3 {
 };
 
 Vec3 reflect(Vec3 r, Vec3 n);
+Vec3 refract(Vec3 r, Vec3 n, double k1, double k2);
 
 #endif

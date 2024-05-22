@@ -45,3 +45,20 @@ string Vec3::string() {
 Vec3 reflect(Vec3 r, Vec3 n) {
     return r - n * (2 * (r * n));
 }
+
+Vec3 refract(Vec3 incident, Vec3 normal, double k1, double k2) {
+    normal = normal.normalize();
+    incident = incident.normalize();
+    double cosTheta1 = incident * normal * -1;
+    double sinTheta1_sq = 1.0 - cosTheta1 * cosTheta1;
+    double sinTheta2_sq = (k1 / k2) * (k1 / k2) * sinTheta1_sq;
+
+    if (sinTheta2_sq > 1.0) {
+        // Total internal reflection
+        return reflect(incident, normal);
+    }
+
+    double cosTheta2 = sqrt(1.0 - sinTheta2_sq);
+    Vec3 refracted = incident * (k1 / k2) + normal * ((k1 / k2) * cosTheta1 - cosTheta2);
+    return refracted;
+}
