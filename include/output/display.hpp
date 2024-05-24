@@ -2,12 +2,12 @@
 #define Display_H
 
 #include <string>
-#include <vector>
 
-#include "types/color.hpp"
+#include "core/World.hpp"
 
-using namespace std;
-void display(string window_name, vector<vector<Color>> &img, int frame);
-void fileout(string filename, vector<vector<Color>> &img, int frame, int frame_c, int fps);
+
+void init(std::string window_name, int width, int height);
+void display(const World& world);
+void destroy();
 
 #endif

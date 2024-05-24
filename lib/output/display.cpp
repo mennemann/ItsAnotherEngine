@@ -1,57 +1,211 @@
 #include "output/display.hpp"
 
+
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <iostream>
 #include <string>
-#include <vector>
+#include <fstream>
+#include <streambuf>
 
-#include "types/color.hpp"
-
-using namespace std;
 
 GLFWwindow* window = nullptr;
-uint8_t* rgbArray;
+GLuint VBO, VAO;
 
-auto init(int width, int height, string window_name) {
-    if (!glfwInit()) {
-        std::cerr << "Failed to initialize GLFW" << std::endl;
-        return -1;
-    }
+unsigned int shaderProgram;
 
-    window = glfwCreateWindow(width, height, window_name.c_str(), NULL, NULL);
-    if (!window) {
-        std::cerr << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
 
-    glfwMakeContextCurrent(window);
-    rgbArray = new uint8_t[width * height * 3];
-    return 0;
+
+
+
+std::string readFile(std::string path) {
+    std::ifstream t(path);
+    std::string str((std::istreambuf_iterator<char>(t)),
+                 std::istreambuf_iterator<char>());
+    return str;
 }
 
 
-void display(string window_name, vector<vector<Color>>& img, int frame) {
-    int width = img[0].size();
-    int height = img.size();
-    if (window == nullptr) init(width, height, window_name);
-    cout << frame << endl;
+// Function to compile shaders and link them into a program
+void createShaderBaseProgram() {
+    // Vertex Shader source code
+    const char* vertexShaderSource = R"(
+#version 330 core
+layout(location = 0) in vec3 aPos;
+
+void main() {
+    gl_Position = vec4(aPos, 1.0);
+}
+)";
+
+    std::string fragmentShaderSourceString = readFile("shader/render.frag");
+    const char* fragmentShaderSource = fragmentShaderSourceString.c_str();
+
+    int success;
+    char infoLog[512];
+
+    // Vertex Shader
+    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
+    glCompileShader(vertexShader);
+    // Check for shader compile errors
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
+        std::cerr << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
+                  << infoLog << std::endl;
+    }
+
+    // Fragment Shader
+    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
+    glCompileShader(fragmentShader);
+    // Check for shader compile errors
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
+        std::cerr << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
+                  << infoLog << std::endl;
+    }
+
+
+
+    // Link shaders
+    shaderProgram = glCreateProgram();
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
+    glLinkProgram(shaderProgram);
+
+
+    // Check for linking errors
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
+        std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n"
+                  << infoLog << std::endl;
+    }
+
+    // Delete the shaders as they're linked into our program now and no longer necessary
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+}
+
+
+// Function to initialize GLFW and GLAD
+void init(std::string window_name, int width, int height) {
+    // Initialize GLFW
+    if (!glfwInit()) {
+        std::cerr << "Failed to initialize GLFW" << std::endl;
+        return;
+    }
+
+    // Configure GLFW
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    // Create a windowed mode window and its OpenGL context
+    window = glfwCreateWindow(width, height, window_name.c_str(), nullptr, nullptr);
+    if (!window) {
+        std::cerr << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return;
+    }
+
+    // Make the window's context current
+    glfwMakeContextCurrent(window);
+
+    // Initialize GLAD
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        std::cerr << "Failed to initialize GLAD" << std::endl;
+        return;
+    }
+
+    // Define the viewport dimensions
+    glViewport(0, 0, width, height);
+
+    // Set up vertex data and buffers
+    float vertices[] = {
+        -1.0f, -1.0f, 0.0f,
+        1.0f, -1.0f, 0.0f,
+        -1.0f, 1.0f, 0.0f,
+        1.0f, 1.0f, 0.0f};
+
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+
+    createShaderBaseProgram();
+}
+
+
+
+
+unsigned int generateSdfShaderFunction(const World& world) {
+    auto r = R"(
+float sdf(vec3 p) {
+    vec3 q = vec3(20,0,400);
+    return distance(q,p) - 10;
+}
+    )"; 
+
+
+
+
+
+
+    
+    unsigned int sdfShaderFunction = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(sdfShaderFunction, 1, &r, nullptr);
+    glCompileShader(sdfShaderFunction);
+
+
+    return sdfShaderFunction;
+}
+
+
+
+
+void display(const World& world) {
+    if (glfwWindowShouldClose(window)) exit(0);
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
+
     glClear(GL_COLOR_BUFFER_BIT);
 
 
-    for (int y = 0; y < height; y++) {
-        for(int x = 0; x < width; x++) {
-            int index = (y*width +x) * 3;
-            rgbArray[index] = img[y][x].r;
-            rgbArray[index + 1] = img[y][x].g;
-            rgbArray[index + 2] = img[y][x].b;
-        }
-    }
 
-    glRasterPos2i(-1, -1);
-    glDrawPixels(width, height, GL_RGB, GL_UNSIGNED_BYTE, rgbArray);
+    unsigned int sdfShaderFunction = generateSdfShaderFunction(world);
+    glAttachShader(shaderProgram, sdfShaderFunction);
+    glLinkProgram(shaderProgram);
+
+    glUseProgram(shaderProgram);
+
+    glDetachShader(shaderProgram, sdfShaderFunction);
+    glDeleteShader(sdfShaderFunction);
+
+
+
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
+}
+
+void destroy() {
+    // Clean up
+    glDeleteProgram(shaderProgram);
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+
+    // Terminate GLFW
+    glfwTerminate();
 }

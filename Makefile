@@ -1,10 +1,10 @@
 CXX = g++
-CXXFLAGS = -g -Wall -Wextra -std=c++17 -fPIC -Iinclude -Ilib -fopenmp  -I C:\msys64\mingw64\include
+CXXFLAGS = -g -Wall -Wextra -std=c++17 -fPIC -Iinclude -Ilib -fopenmp  -I C:\msys64\mingw64\include -IGLAD/include
 
 SRCDIR = lib
 OUTDIR = build
 
-SOURCES = $(wildcard $(SRCDIR)/**/*.cpp)
+SOURCES = $(wildcard $(SRCDIR)/**/*.cpp) GLAD/src/glad.c
 OBJECTS = $(SOURCES:$(SRCDIR)/%.cpp=$(OUTDIR)/%.o)
 
 TARGET = ItsAnotherEngine.dll
@@ -15,7 +15,7 @@ all: $(TARGET)
 
 #Linking
 $(TARGET): $(OBJECTS)
-	$(CXX) -shared -o $@ $^ -L C:\msys64\mingw64\lib -lglfw3 -lopengl32 -fopenmp
+	$(CXX) $(CXXFLAGS) -shared -o $@ $^ -L C:\msys64\mingw64\lib -lglfw3 -lopengl32 -fopenmp
 
 #Compiling
 $(OUTDIR)/%.o: $(SRCDIR)/%.cpp
