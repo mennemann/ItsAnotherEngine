@@ -11,10 +11,17 @@ struct camera_data {
     float render_distance;
 };
 
+struct lights_data {
+    vec3 position[10];
+    int N;
+};
+
+
 out vec4 FragColor;
 
 uniform camera_data camera;
 uniform vec3 background;
+uniform lights_data lights;
 
 float sdf(vec3 p);
 

@@ -189,6 +189,14 @@ void display(const World& world, camera_data camera) {
 
     glUniform3f(glGetUniformLocation(shaderProgram, "background"), world.background.r,world.background.g,world.background.b);
 
+    int lights_N = world.lights.size();
+    for (int i = 0; i<lights_N; i++) {
+        auto light_position = world.lights[i]->position;
+        string name = "lights.position["+ to_string(i) + "]";
+        glUniform3f(glGetUniformLocation(shaderProgram,name.c_str()),light_position.x,light_position.y,light_position.z);
+    }
+    glUniform1i(glGetUniformLocation(shaderProgram,"lights.N"),lights_N);
+
 
     glDetachShader(shaderProgram, sdfShaderFunction);
     glDeleteShader(sdfShaderFunction);
