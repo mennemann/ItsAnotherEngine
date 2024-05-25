@@ -187,6 +187,7 @@ void display(const World& world, camera_data camera) {
     glUniform1f(glGetUniformLocation(shaderProgram, "camera.focal_length"), camera.focal_length);
     glUniform1f(glGetUniformLocation(shaderProgram, "camera.render_distance"), camera.render_distance);
 
+    glUniform3f(glGetUniformLocation(shaderProgram, "background"), world.background.r,world.background.g,world.background.b);
 
 
     glDetachShader(shaderProgram, sdfShaderFunction);

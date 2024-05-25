@@ -14,6 +14,7 @@ struct camera_data {
 out vec4 FragColor;
 
 uniform camera_data camera;
+uniform vec3 background;
 
 float sdf(vec3 p);
 
@@ -25,7 +26,7 @@ vec3 shoot(vec3 position, vec3 direction) {
             return vec3(1,1,0);
         }
     }
-    return vec3(0,0,0);
+    return background;
 }
 
 
