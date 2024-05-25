@@ -25,12 +25,40 @@ uniform lights_data lights;
 
 float sdf(vec3 p);
 
+
+vec3 estimateNormal(vec3 p) {
+    float EPSILON = 0.01;
+
+    return normalize(vec3(
+        sdf(vec3(p.x + EPSILON, p.y, p.z)) - sdf(vec3(p.x - EPSILON, p.y, p.z)),
+        sdf(vec3(p.x, p.y + EPSILON, p.z)) - sdf(vec3(p.x, p.y - EPSILON, p.z)),
+        sdf(vec3(p.x, p.y, p.z + EPSILON)) - sdf(vec3(p.x, p.y, p.z - EPSILON))
+    ));
+}
+
+float surface_brightness(vec3 p, vec3 l) {
+    return ( 1 - (dot(estimateNormal(p), normalize(p - l)) + 1) / 2 );
+}
+
+
 vec3 shoot(vec3 position, vec3 direction) {
     while(distance(position, camera.position) < camera.render_distance) {
         float free_distance = sdf(position);
         position += (direction * free_distance);
         if (free_distance < 0.1) {
-            return vec3(1,1,0);
+            vec3 c = vec3(1,1,1);
+
+
+            float brightness = 0;
+            for (int i = 0; i < lights.N; i++) {
+                brightness += surface_brightness(position, lights.position[i]);
+            }
+            brightness /= lights.N;
+
+            float elevation = 0.2;
+            c *= (brightness + elevation) / (1.0 + elevation);
+
+            return c;
         }
     }
     return background;

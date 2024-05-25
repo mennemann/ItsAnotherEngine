@@ -63,6 +63,8 @@ int main(void) {
     
     World w;
 
+    w.add(new Light{{0, 150, 400}});
+
     Vec3 camera_position = Vec3(0,200,150);
     Vec3 camera_right = Vec3(1,0,0);
 
