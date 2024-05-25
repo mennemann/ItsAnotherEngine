@@ -21,7 +21,7 @@ Vec3 reflect(Vec3 r, Vec3 n);
 Vec3 refract(Vec3 r, Vec3 n, double k1, double k2);
 
 std::string to_glsl_vec3(Vec3 p) {
-    return "vec3(" + to_string(p.x) + "," + to_string(p.y) + "," + to_string(p.z) + ")";
+    return "vec3(" + std::to_string(p.x) + "," + std::to_string(p.y) + "," + std::to_string(p.z) + ")";
 }
 
 #endif

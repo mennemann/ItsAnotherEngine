@@ -2,6 +2,7 @@
 #define Shape_H
 
 #include <limits>
+#include <string>
 
 #include "types/Vec3.hpp"
 #include "types/color.hpp"
@@ -14,16 +15,16 @@ class Shape {
     double refl;
     double tran;
 
-    virtual string color(Vec3 postition) {
+    virtual std::string color(Vec3 postition) {
         return to_glsl_vec3({col.r,col.g,col.b});
     }
 
-    virtual string reflectance(Vec3 position) {
-        return to_string(refl);
+    virtual std::string reflectance(Vec3 position) {
+        return std::to_string(refl);
     }
 
-    virtual string transparency(Vec3 position) {
-        return to_string(tran);
+    virtual std::string transparency(Vec3 position) {
+        return std::to_string(tran);
     }
 
     Shape(Vec3 pos, Color color, double reflectance = 0, double transparency = 0) : position(pos), col(color), refl(reflectance), tran(transparency) {}
