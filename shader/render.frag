@@ -17,12 +17,20 @@ struct lights_data {
     int N;
 };
 
+struct shape {
+    vec3 color;
+    float transparency;
+    float reflectivity;
+};
+
 
 out vec4 FragColor;
 
 uniform camera_data camera;
 uniform vec3 background;
 uniform lights_data lights;
+
+shape RESULT_HANDLE;
 
 float sdf(vec3 p);
 
