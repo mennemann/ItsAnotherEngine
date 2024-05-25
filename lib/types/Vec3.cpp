@@ -62,3 +62,8 @@ Vec3 refract(Vec3 incident, Vec3 normal, double k1, double k2) {
     Vec3 refracted = incident * (k1 / k2) + normal * ((k1 / k2) * cosTheta1 - cosTheta2);
     return refracted;
 }
+
+
+std::string to_glsl_vec3(Vec3 p) {
+    return "vec3(" + std::to_string(p.x) + "," + std::to_string(p.y) + "," + std::to_string(p.z) + ")";
+}
