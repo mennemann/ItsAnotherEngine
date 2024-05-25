@@ -29,8 +29,8 @@ class Shape {
 
     Shape(Vec3 pos, Color color, double reflectance = 0, double transparency = 0) : position(pos), col(color), refl(reflectance), tran(transparency) {}
 
-    virtual double sdf(Vec3 position) {
-        return std::numeric_limits<double>::max();
+    virtual std::string sdf(Vec3 position) {
+        return "";
     }
 };
 
