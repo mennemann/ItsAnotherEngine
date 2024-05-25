@@ -75,16 +75,7 @@ void main() {
     shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
 
-
-    // Check for linking errors
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
-        std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n"
-                  << infoLog << std::endl;
-    }
 
     // Delete the shaders as they're linked into our program now and no longer necessary
     glDeleteShader(vertexShader);
@@ -174,7 +165,7 @@ float sdf(vec3 p) {
 
 
 
-void display(const World& world) {
+void display(const World& world, camera_data camera) {
     if (glfwWindowShouldClose(window)) exit(0);
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
 
@@ -187,6 +178,16 @@ void display(const World& world) {
     glLinkProgram(shaderProgram);
 
     glUseProgram(shaderProgram);
+
+
+
+    glUniform3f(glGetUniformLocation(shaderProgram, "camera.position"),camera.position.x,camera.position.y,camera.position.z);
+    glUniform3f(glGetUniformLocation(shaderProgram, "camera.up"),camera.up.x,camera.up.y,camera.up.z);
+    glUniform3f(glGetUniformLocation(shaderProgram, "camera.right"),camera.right.x,camera.right.y,camera.right.z);
+    glUniform1f(glGetUniformLocation(shaderProgram, "camera.focal_length"), camera.focal_length);
+    glUniform1f(glGetUniformLocation(shaderProgram, "camera.render_distance"), camera.render_distance);
+
+
 
     glDetachShader(shaderProgram, sdfShaderFunction);
     glDeleteShader(sdfShaderFunction);
