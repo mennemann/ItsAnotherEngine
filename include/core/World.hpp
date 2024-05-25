@@ -2,25 +2,27 @@
 #define World_H
 
 #include <vector>
-#include <string>
 
 #include "Light.hpp"
 #include "Shape.hpp"
-#include "types/Vec3.hpp"
+#include "types/Color.hpp"
 
 using namespace std;
 
 class World {
    public:
+    Color background = {0,0,0};
+    
     vector<Shape*> shapes;
     vector<Light*> lights;
 
-    Color background = {0,0,0};
+    void add(Shape* shape) {
+        shapes.push_back(shape);
+    }
 
-    void add(Shape* shape);
-    void add(Light* light);
-
-    string sdf();
+    void add(Light* light) {
+        lights.push_back(light);
+    }
 };
 
 #endif
