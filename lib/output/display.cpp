@@ -141,7 +141,7 @@ void init(std::string window_name, int width, int height) {
 
 
 unsigned int generateSdfShaderFunction(const World& world) {
-    auto r = R"(
+    const char* shaderCode = R"(
 float sdf(vec3 p) {
     vec3 q = vec3(20,0,400);
     return distance(q,p) - 10;
@@ -155,7 +155,7 @@ float sdf(vec3 p) {
 
     
     unsigned int sdfShaderFunction = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(sdfShaderFunction, 1, &r, nullptr);
+    glShaderSource(sdfShaderFunction, 1, &shaderCode, nullptr);
     glCompileShader(sdfShaderFunction);
 
 

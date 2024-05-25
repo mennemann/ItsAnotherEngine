@@ -1,7 +1,8 @@
 #version 430 core
 
-float width = 1080;
-float height = 720;
+#define MAX_LIGHTS_N 20
+#define width 1080
+#define height 720
 
 struct camera_data {
     vec3 position;
@@ -12,7 +13,7 @@ struct camera_data {
 };
 
 struct lights_data {
-    vec3 position[10];
+    vec3 position[MAX_LIGHTS_N];
     int N;
 };
 
