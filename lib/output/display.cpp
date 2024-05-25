@@ -26,6 +26,23 @@ std::string readFile(std::string path) {
     return str;
 }
 
+GLuint compileShader(const char* source, GLint type) {
+    int success;
+    char infoLog[512];
+
+    unsigned int shader = glCreateShader(type);
+    glShaderSource(shader, 1, &source, nullptr);
+    glCompileShader(shader);
+    // Check for shader compile errors
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(shader, 512, nullptr, infoLog);
+        std::cerr << "ERROR::SHADER::COMPILATION_FAILED\n"
+                  << infoLog << std::endl;
+    }
+
+    return shader;
+}
 
 // Function to compile shaders and link them into a program
 void createShaderBaseProgram() {
@@ -42,33 +59,8 @@ void main() {
     std::string fragmentShaderSourceString = readFile("shader/render.frag");
     const char* fragmentShaderSource = fragmentShaderSourceString.c_str();
 
-    int success;
-    char infoLog[512];
-
-    // Vertex Shader
-    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
-    glCompileShader(vertexShader);
-    // Check for shader compile errors
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
-        std::cerr << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
-                  << infoLog << std::endl;
-    }
-
-    // Fragment Shader
-    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
-    glCompileShader(fragmentShader);
-    // Check for shader compile errors
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
-        std::cerr << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
-                  << infoLog << std::endl;
-    }
-
+    GLuint vertexShader = compileShader(vertexShaderSource, GL_VERTEX_SHADER);
+    GLuint fragmentShader = compileShader(fragmentShaderSource, GL_FRAGMENT_SHADER);
 
 
     // Link shaders
