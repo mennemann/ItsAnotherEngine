@@ -4,10 +4,8 @@
 #include "types/Vec3.hpp"
 
 
-class Light {
-   public:
+struct Light {
     Vec3 position;
-    Light(Vec3 position) : position(position) {}
 };
 
 #endif
