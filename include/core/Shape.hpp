@@ -14,16 +14,16 @@ class Shape {
     double refl;
     double tran;
 
-    virtual Color color(Vec3 postition) {
-        return this->col;
+    virtual string color(Vec3 postition) {
+        return to_glsl_vec3({col.r,col.g,col.b});
     }
 
-    virtual double reflectance(Vec3 position) {
-        return this->refl;
+    virtual string reflectance(Vec3 position) {
+        return to_string(refl);
     }
 
-    virtual double transparency(Vec3 position) {
-        return this->tran;
+    virtual string transparency(Vec3 position) {
+        return to_string(tran);
     }
 
     Shape(Vec3 pos, Color color, double reflectance = 0, double transparency = 0) : position(pos), col(color), refl(reflectance), tran(transparency) {}
