@@ -46,6 +46,21 @@ GLuint compileShader(const char* source, GLint type) {
     return shader;
 }
 
+void linkProgram() {
+    int success;
+    char infoLog[512];
+
+    glLinkProgram(shaderProgram);
+
+    // Check for shader program linking errors
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
+        std::cerr << "ERROR::SHADER::LINKING_FAILED\n" << infoLog << std::endl;
+        exit(1);
+    }
+}
+
 // Function to compile shaders and link them into a program
 void createShaderBaseProgram() {
     // Vertex Shader source code
@@ -154,7 +169,7 @@ shape closest() { return RESULT_HANDLE; }
 
     for (int j = 0; j < N; j++) {
         std::string i = to_string(j);
-        for (int k = 0; k<world.shapes[j]->helpers().size(); k++) {
+        for (unsigned int k = 0; k<world.shapes[j]->helpers().size(); k++) {
             shaderCode += world.shapes[j]->helpers()[k] + "\n";
         }
 
@@ -213,7 +228,7 @@ void display(const World& world, camera_data camera) {
 
     unsigned int sdfShaderFunction = generateSdfShaderFunction(world);
     glAttachShader(shaderProgram, sdfShaderFunction);
-    glLinkProgram(shaderProgram);
+    linkProgram();
 
     glUseProgram(shaderProgram);
 
