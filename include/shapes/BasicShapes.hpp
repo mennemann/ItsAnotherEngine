@@ -58,4 +58,16 @@ class RoundBox : public BasicShape {
     RoundBox(Vec3 position, Color color, Vec3 dimensions, double radius, double reflectance = 0, double transparency = 0) : BasicShape(position, color, reflectance, transparency), dimensions(dimensions), radius(radius) {}
 };
 
+class Plane : public BasicShape {
+    public:
+    Vec3 normal;
+    double h;
+
+    Plane(Vec3 normal, float h) : BasicShape({0,0,0}), normal(normal), h(h) {}
+
+    virtual std::string sdf() {
+        return "return dot(" + to_glsl_vec3(normal) + ",p-" + to_glsl_vec3(p) + ") + " + to_string(h) + ";";
+    }
+};
+
 #endif
