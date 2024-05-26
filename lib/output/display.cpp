@@ -154,6 +154,7 @@ shape closest() { return RESULT_HANDLE; }
     for (int j = 0; j < N; j++) {
         std::string i = to_string(j);
         shaderCode += "float shape_" + i + "_sdf(vec3 p) {" + world.shapes[j]->sdf() + "}\n";
+        shaderCode += "vec3 shape_" + i + "_color(vec3 p) {" + world.shapes[j]->color() + "}\n";
     }
 
     // sdf function header + distance array declaration
@@ -179,7 +180,7 @@ shape closest() { return RESULT_HANDLE; }
     for (int j = 0; j < N; j++) {
         std::string i = to_string(j);
         shaderCode += "case " + i + ":\n";
-        shaderCode += "RESULT_HANDLE.color = " + world.shapes[j]->color() + ";\n";
+        shaderCode += "RESULT_HANDLE.color = shape_" + i + "_color(p);\n";
         shaderCode += "RESULT_HANDLE.reflectivity = " + world.shapes[j]->reflectance() + ";\n";
         shaderCode += "RESULT_HANDLE.transparency = " + world.shapes[j]->transparency() + ";\n";
         shaderCode += "break;\n";

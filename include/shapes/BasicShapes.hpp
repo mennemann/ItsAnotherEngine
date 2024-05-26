@@ -19,7 +19,7 @@ class BasicShape : public Shape {
     }
 
     virtual std::string color() {
-        return to_glsl_vec3({c.r,c.g,c.b});
+        return "return " + to_glsl_vec3({c.r,c.g,c.b}) + ";";
     }
 
     virtual std::string reflectance() {
