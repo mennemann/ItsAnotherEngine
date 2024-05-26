@@ -39,6 +39,7 @@ GLuint compileShader(const char* source, GLint type) {
         glGetShaderInfoLog(shader, 512, nullptr, infoLog);
         std::cerr << "ERROR::SHADER::COMPILATION_FAILED\n"
                   << infoLog << std::endl;
+        std::cout << source << endl;
         exit(1);
     }
 
@@ -153,6 +154,10 @@ shape closest() { return RESULT_HANDLE; }
 
     for (int j = 0; j < N; j++) {
         std::string i = to_string(j);
+        for (int k = 0; k<world.shapes[j]->helpers().size(); k++) {
+            shaderCode += world.shapes[j]->helpers()[k] + "\n";
+        }
+
         shaderCode += "float shape_" + i + "_sdf(vec3 p) {" + world.shapes[j]->sdf() + "}\n";
         shaderCode += "vec3 shape_" + i + "_color(vec3 p) {" + world.shapes[j]->color() + "}\n";
     }
