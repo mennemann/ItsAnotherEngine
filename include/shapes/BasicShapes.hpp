@@ -2,6 +2,8 @@
 #define BasicShapes_H
 
 #include <string>
+#include <sstream>
+#include <iostream>
 
 #include "core/Shape.hpp"
 #include "types/Color.hpp"
@@ -52,7 +54,7 @@ class RoundBox : public BasicShape {
     double radius;
 
     virtual std::string sdf() {
-        return "vec3 b = " + to_glsl_vec3(dimensions) + ";float r = " + to_string(radius) + ";vec3 q = abs(p-" + to_glsl_vec3(p) + ") - b + r;return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0) - r;";
+        return "vec3 b = " + to_glsl_vec3(dimensions) + ";float r = " + std::to_string(radius) + ";vec3 q = abs(p-" + to_glsl_vec3(p) + ") - b + r;return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0) - r;";
     }
 
     RoundBox(Vec3 position, Color color, Vec3 dimensions, double radius, double reflectance = 0, double transparency = 0) : BasicShape(position, color, reflectance, transparency), dimensions(dimensions), radius(radius) {}
@@ -66,7 +68,7 @@ class Plane : public BasicShape {
     Plane(Vec3 normal, float h) : BasicShape({0,0,0}), normal(normal), h(h) {}
 
     virtual std::string sdf() {
-        return "return dot(" + to_glsl_vec3(normal) + ",p-" + to_glsl_vec3(p) + ") + " + to_string(h) + ";";
+        return "return dot(" + to_glsl_vec3(normal) + ",p-" + to_glsl_vec3(p) + ") + " + std::to_string(h) + ";";
     }
 
     virtual std::string color() {
@@ -81,6 +83,51 @@ if(darken) return vec3(0.8,0.8,0.8);
 return vec3(1,1,1);
         )";
     } 
+};
+
+
+
+
+
+
+class MeltingObject : public Shape {
+    public:
+    Shape *a, *b;
+    double k;
+
+    virtual std::string sdf() {
+        return "float a = h0"+addr+"(p); float b = h1"+addr+"(p); float k = " + std::to_string(k) +"; float h = max(k-abs(a-b),0.0)/k;return min(a,b) - h*h*h*k*1.0/6.0;";
+    }
+
+    virtual std::string color() {
+        return "float a = h0"+addr+"(p); float b = h1"+addr+"(p); float m1 = b/(a+b); float m2 = a/(a+b); return m1*h2" + addr + "(p) + m2*h3" + addr + "(p);";
+    }
+
+    virtual std::string reflectance() {
+        return "0";
+    }
+
+    virtual std::string transparency() {
+        return "0";
+    }
+
+    virtual std::vector<std::string> helpers() {
+        return {
+            "float h0" + addr + "(vec3 p) {" + a->sdf() + "}",
+            "float h1" + addr + "(vec3 p) {" + b->sdf() + "}",
+            "vec3 h2" + addr + "(vec3 p) {" + a->color() + "}",
+            "vec3 h3" + addr + "(vec3 p) {" + b->color() + "}",
+        };
+    }
+
+    MeltingObject(Shape* a, Shape* b, double k = 3) : a(a), b(b), k(k) {
+        std::ostringstream address;
+        address << (void const *)this;
+        addr = address.str(); 
+    }
+    
+    private:
+    std::string addr;
 };
 
 #endif
