@@ -9,29 +9,10 @@
 
 class Shape {
    public:
-    Vec3 position;
-
-    Color col;
-    double refl;
-    double tran;
-
-    virtual std::string color() {
-        return to_glsl_vec3({col.r,col.g,col.b});
-    }
-
-    virtual std::string reflectance() {
-        return std::to_string(refl);
-    }
-
-    virtual std::string transparency() {
-        return std::to_string(tran);
-    }
-
-    Shape(Vec3 pos, Color color, double reflectance = 0, double transparency = 0) : position(pos), col(color), refl(reflectance), tran(transparency) {}
-
-    virtual std::string sdf() {
-        return "distance(p," + to_glsl_vec3(position) + ") - " + std::to_string(20);
-    }
+    virtual std::string sdf() = 0;
+    virtual std::string color() = 0;
+    virtual std::string reflectance() = 0;
+    virtual std::string transparency() = 0;
 };
 
 #endif

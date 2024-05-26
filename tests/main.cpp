@@ -3,6 +3,7 @@
 #include "types/Color.hpp"
 #include "types/Vec3.hpp"
 #include "core/Shape.hpp"
+#include "shapes/BasicShapes.hpp"
 #include "output/display.hpp"
 #include <iostream>
 #include <math.h>
@@ -25,8 +26,13 @@ int main(void) {
     World w;
 
     w.add(new Light{{0, 150, 400}});
-    auto s1 = new Shape({0,0,400},{0,0,1});
+
+    auto s1 = new Sphere({0,0,400},{0,0,1},20);
+    auto s2 = new RoundBox({40,0,450},{1,0,1},{10,10,10},3);
+
+
     w.add(s1);
+    w.add(s2);
 
     Vec3 camera_position = Vec3(0,200,150);
     Vec3 camera_right = Vec3(1,0,0);
@@ -48,7 +54,7 @@ int main(void) {
     while(1) {       
         display(w, camera);
 
-        s1->position.y = 10.0*sin(frame/10.0);
+        s1->p.y = 10.0*sin(frame/10.0);
 
         frame++;
         cout << frame << endl;
