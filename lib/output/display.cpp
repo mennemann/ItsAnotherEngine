@@ -149,20 +149,26 @@ shape closest() { return RESULT_HANDLE; }
 
 )";
 
+    int N = world.shapes.size();
+
+    for (int j = 0; j < N; j++) {
+        std::string i = to_string(j);
+        shaderCode += "float shape_" + i + "_sdf(vec3 p) {" + world.shapes[j]->sdf() + "}\n";
+    }
+
     // sdf function header + distance array declaration
     shaderCode += "float sdf(vec3 p) {\nfloat distances[] = {";
-    int N = world.shapes.size();
 
     // distance array initialization
     for (int j = 0; j < N; j++) {
         std::string i = to_string(j);
-        shaderCode += world.shapes[j]->sdf() + ",";
+        shaderCode += "shape_" + i + "_sdf(p),";
     }
 
     shaderCode.pop_back();
 
     // init variable for finding minimum in distances[]
-    shaderCode += "};\nint index = -1;\nfloat min = 1.0/0.0;\n";
+    shaderCode += "};\nint index = -1;\nfloat min = 100000000.0;\n";
 
     // finding minimum
     shaderCode += "for(int i = 0; i < " + to_string(N) + "; i++) {\nif (distances[i] < min) {min = distances[i];index = i;}\n}\n";
