@@ -68,6 +68,19 @@ class Plane : public BasicShape {
     virtual std::string sdf() {
         return "return dot(" + to_glsl_vec3(normal) + ",p-" + to_glsl_vec3(p) + ") + " + to_string(h) + ";";
     }
+
+    virtual std::string color() {
+        return R"(
+int square_size = 20;
+int mod_x = int(mod(int(p.x),square_size));
+int mod_z = int(mod(int(p.z),square_size));
+
+bool darken = abs(mod_x) >= square_size / 2;
+if (abs(mod_z) >= square_size / 2) darken = !darken;
+if(darken) return vec3(0.8,0.8,0.8);
+return vec3(1,1,1);
+        )";
+    } 
 };
 
 #endif
