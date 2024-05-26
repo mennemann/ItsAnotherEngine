@@ -27,39 +27,40 @@ int main(void) {
 
     w.add(new Light{{0, 150, 400}});
 
-    auto s1 = new Sphere({0,0,400},{0,0,1},20);
-    auto s2 = new RoundBox({40,0,450},{1,0,1},{10,10,10},3);
+    auto box = new RoundBox({0,50,440},{1,0.2,0.2},{20,20,20},5);
+    auto sphere = new Sphere({0,40,400},{0.2,0.9,0.5},20);
+    auto plane = new Plane({0,1,0},20);
+    
+    auto mo = new MeltingObject(sphere, box,30);
 
 
-    w.add(s1);
-    w.add(s2);
-
-    Vec3 camera_position = Vec3(0,200,150);
-    Vec3 camera_right = Vec3(1,0,0);
-
-    Vec3 camera_focus = Vec3(0,0,400);
-    Vec3 camera_up = ((camera_focus-camera_position).cross(camera_right)).normalize();
+    w.add(mo);
+    w.add(plane);
 
 
     camera_data camera {
-        camera_position,
-        camera_up,
-        camera_right,
+        {0,200,150},
+        {0,0,0},
+        {1,0,0},
         1000,
         4000
     };
 
 
-    int frame = 10;
-    while(1) {       
+    int frame = 0;
+    while(1) {
+        camera.position.y = 200*abs(cos((double)frame/100.0));
+        camera.up = ((box->p-camera.position).cross(camera.right)).normalize();
+
         display(w, camera);
 
-        s1->p.y = 10.0*sin(frame/10.0);
+        sphere->p.x = 40.0*sin((double)frame/10.0);
+        sphere->p.z = 40.0*cos((double)frame/10.0)+400;
 
         frame++;
         cout << frame << endl;
 
-        if (frame > 500) break;
+        if (frame > 1000) break;
     }
 
     destroy();
