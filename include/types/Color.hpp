@@ -2,9 +2,9 @@
 #define color_t
 
 struct Color {
-    float r;
-    float g;
-    float b;
+    double r;
+    double g;
+    double b;
 
     void operator*=(double const other) {
         r *= other;
@@ -13,7 +13,7 @@ struct Color {
     }
 
     Color operator*(double const other) const {
-        return {static_cast<int>(r * other), static_cast<int>(g * other), static_cast<int>(b * other)};
+        return {r * other, g * other, b * other};
     }
 
     Color operator+(Color const other) const {
