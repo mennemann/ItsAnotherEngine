@@ -19,8 +19,8 @@ struct lights_data {
 
 struct shape {
     vec3 color;
-    float transparency;
     float reflectivity;
+    float transparency;
 };
 
 
@@ -30,10 +30,9 @@ uniform camera_data camera;
 uniform vec3 background;
 uniform lights_data lights;
 
-shape RESULT_HANDLE;
 
 float sdf(vec3 p);
-
+shape closest();
 
 vec3 estimateNormal(vec3 p) {
     float EPSILON = 0.01;
@@ -55,7 +54,7 @@ vec3 shoot(vec3 position, vec3 direction) {
         float free_distance = sdf(position);
         position += (direction * free_distance);
         if (free_distance < 0.1) {
-            vec3 c = vec3(1,1,1);
+            vec3 c = closest().color;
 
 
             float brightness = 0;

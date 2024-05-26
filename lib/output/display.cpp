@@ -39,6 +39,7 @@ GLuint compileShader(const char* source, GLint type) {
         glGetShaderInfoLog(shader, 512, nullptr, infoLog);
         std::cerr << "ERROR::SHADER::COMPILATION_FAILED\n"
                   << infoLog << std::endl;
+        exit(1);
     }
 
     return shader;
@@ -133,25 +134,58 @@ void init(std::string window_name, int width, int height) {
 
 
 unsigned int generateSdfShaderFunction(const World& world) {
-    const char* shaderCode = R"(
-float sdf(vec3 p) {
-    vec3 q = vec3(20,0,400);
-    return distance(q,p) - 10;
-}
-    )"; 
+    string shaderCode = R"(
+#version 430 core
 
+struct shape {
+    vec3 color;
+    float reflectivity;
+    float transparency;
+};
 
+shape RESULT_HANDLE;
 
+shape closest() { return RESULT_HANDLE; }
 
+)";
 
+    // sdf function header + distance array declaration
+    shaderCode += "float sdf(vec3 p) {\nfloat distances[] = {";
+    int N = world.shapes.size();
 
+    // distance array initialization
+    for (int j = 0; j < N; j++) {
+        std::string i = to_string(j);
+        shaderCode += world.shapes[j]->sdf() + ",";
+    }
+
+    shaderCode.pop_back();
+
+    // init variable for finding minimum in distances[]
+    shaderCode += "};\nint index = -1;\nfloat min = 1.0/0.0;\n";
+
+    // finding minimum
+    shaderCode += "for(int i = 0; i < " + to_string(N) + "; i++) {\nif (distances[i] < min) {min = distances[i];index = i;}\n}\n";
     
-    unsigned int sdfShaderFunction = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(sdfShaderFunction, 1, &shaderCode, nullptr);
-    glCompileShader(sdfShaderFunction);
+    //
+    shaderCode += "switch(index) {\n";
+
+    for (int j = 0; j < N; j++) {
+        std::string i = to_string(j);
+        shaderCode += "case " + i + ":\n";
+        shaderCode += "RESULT_HANDLE.color = " + world.shapes[j]->color() + ";\n";
+        shaderCode += "RESULT_HANDLE.reflectivity = " + world.shapes[j]->reflectance() + ";\n";
+        shaderCode += "RESULT_HANDLE.transparency = " + world.shapes[j]->transparency() + ";\n";
+        shaderCode += "break;\n";
+    }
+
+    shaderCode += "}\n";
+
+    shaderCode += "return distances[index];\n}";
 
 
-    return sdfShaderFunction;
+    const char* c_shaderCode = shaderCode.c_str();
+    return compileShader(c_shaderCode, GL_FRAGMENT_SHADER);
 }
 
 
