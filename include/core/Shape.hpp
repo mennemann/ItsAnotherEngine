@@ -30,7 +30,7 @@ class Shape {
     Shape(Vec3 pos, Color color, double reflectance = 0, double transparency = 0) : position(pos), col(color), refl(reflectance), tran(transparency) {}
 
     virtual std::string sdf() {
-        return "0";
+        return "distance(p," + to_glsl_vec3(position) + ") - " + std::to_string(20);
     }
 };
 

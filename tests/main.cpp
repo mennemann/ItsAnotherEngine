@@ -5,6 +5,7 @@
 #include "core/Shape.hpp"
 #include "output/display.hpp"
 #include <iostream>
+#include <math.h>
 using namespace std;
 
 
@@ -24,6 +25,8 @@ int main(void) {
     World w;
 
     w.add(new Light{{0, 150, 400}});
+    auto s1 = new Shape({0,0,400},{0,0,1});
+    w.add(s1);
 
     Vec3 camera_position = Vec3(0,200,150);
     Vec3 camera_right = Vec3(1,0,0);
@@ -44,6 +47,9 @@ int main(void) {
     int frame = 10;
     while(1) {       
         display(w, camera);
+
+        s1->position.y = 10.0*sin(frame/10.0);
+
         frame++;
         cout << frame << endl;
 
