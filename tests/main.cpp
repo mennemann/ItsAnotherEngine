@@ -6,6 +6,8 @@
 #include "shapes/BasicShapes.hpp"
 #include "output/display.hpp"
 #include <iostream>
+#include <chrono>
+#include <string>
 #include <math.h>
 using namespace std;
 
