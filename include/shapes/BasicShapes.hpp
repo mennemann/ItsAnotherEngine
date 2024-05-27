@@ -112,12 +112,22 @@ class MeltingObject : public Shape {
     }
 
     virtual std::vector<std::string> helpers() {
-        return {
+        auto h_a = a->helpers();
+        auto h_b = b->helpers();
+        std::vector<std::string> h;
+        h.insert(h.end(), h_a.begin(), h_a.end());
+        h.insert(h.end(), h_b.begin(), h_b.end());
+        std::vector<std::string> j = {
             "float h0" + addr + "(vec3 p) {" + a->sdf() + "}",
             "float h1" + addr + "(vec3 p) {" + b->sdf() + "}",
             "vec3 h2" + addr + "(vec3 p) {" + a->color() + "}",
             "vec3 h3" + addr + "(vec3 p) {" + b->color() + "}",
         };
+        h.insert(h.end(), j.begin(), j.end());
+        
+
+
+        return h;
     }
 
     MeltingObject(Shape* a, Shape* b, double k = 3) : a(a), b(b), k(k) {
