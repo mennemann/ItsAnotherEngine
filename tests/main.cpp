@@ -47,8 +47,11 @@ int main(void) {
     };
 
 
+
+    auto start = std::chrono::high_resolution_clock::now();
+
     int frame = 0;
-    while(1) {
+    while(frame < 1000) {
         camera.position.y = 200*abs(cos((double)frame/100.0));
         camera.up = ((box->p-camera.position).cross(camera.right)).normalize();
 
@@ -58,10 +61,13 @@ int main(void) {
         sphere->p.z = 40.0*cos((double)frame/10.0)+400;
 
         frame++;
-        cout << frame << endl;
-
-        if (frame > 1000) break;
     }
+
+    auto end = std::chrono::high_resolution_clock::now();
+
+    auto s = std::chrono::duration_cast<std::chrono::seconds>(end-start);
+    std::cout << s.count() << "s\n";
+    std::cout << 1000.0/s.count() << " fps\n";
 
     destroy();
     return 0;
